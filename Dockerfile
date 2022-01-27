@@ -13,9 +13,8 @@ WORKDIR /app
 
 RUN wget https://github.com/kaspanet/kaspad/releases/download/${VERSION}/kaspad-${VERSION}-linux.zip 2>&1 && \
   unzip kaspad-${VERSION}-linux.zip && \
-  mv bin/kaspad ./ && \
-  rm -r bin/ && \
-  rm kaspad-${VERSION}-linux.zip
+  mv bin/kaspad bin/kaspactl ./ && \
+  rm -r bin/ kaspad-${VERSION}-linux.zip
 
 USER kaspad
 
