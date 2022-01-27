@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  kaspad:
+    container_name: kaspad
+    image: supertypo/kaspad:latest
+    restart: unless-stopped
+    ports:
+      - "16110:16110/tcp"
+      - "16111:16111/tcp"
+#    volumes:
+#      # If specified, directory must be writable by uid=51591:
+#      - /var/kaspad/:/app/data/
+#    command: /app/kaspad --utxoindex --enablebanning --whitelist=192.168.1.0/24
+
