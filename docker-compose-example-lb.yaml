@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     volumes:
       - kaspad1:/app/data/
-#    command: /app/kaspad --utxoindex --enablebanning --whitelist=192.168.168.0/24
+#    command: /app/kaspad --utxoindex --enablebanning --whitelist=192.168.1.0/24
 
   kaspad2:
     container_name: kaspad2
@@ -17,8 +17,8 @@ services:
       - kaspad2:/app/data/
 #    command: /app/kaspad --utxoindex --enablebanning --whitelist=192.168.1.0/24
 
-  loadbalancer:
-    container_name: loadbalancer
+  kaspad_loadbalancer:
+    container_name: kaspad_loadbalancer
     image: haproxy:latest
     restart: unless-stopped
     ports:
