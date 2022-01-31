@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  kaspad1:
+    container_name: kaspad1
+    image: supertypo/kaspad:v0.11.11
+    restart: unless-stopped
+    volumes:
+      - kaspad1:/app/data/
+#    command: /app/kaspad --utxoindex --enablebanning --whitelist=192.168.168.0/24
+
+  kaspad2:
+    container_name: kaspad2
+    image: supertypo/kaspad:v0.11.11
+    restart: unless-stopped
+    volumes:
+      - kaspad2:/app/data/
+#    command: /app/kaspad --utxoindex --enablebanning --whitelist=192.168.1.0/24
+
+  loadbalancer:
+    container_name: loadbalancer
+    image: haproxy:latest
+    restart: unless-stopped
+    ports:
+      - "16110:16110/tcp"
+      - "16111:16111/tcp"
+    volumes:
+      - ./loadbalancer-example-haproxy.cfg:/haproxy.cfg
+    command: haproxy -f /haproxy.cfg
+
+volumes:
+  kaspad1:
+  kaspad2:
+
