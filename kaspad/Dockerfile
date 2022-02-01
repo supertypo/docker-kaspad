@@ -21,5 +21,5 @@ RUN cd /tmp && \
 
 USER kaspad
 
-CMD ["kaspad", "--utxoindex"]
+CMD ["/app/kaspad", "--utxoindex"]
 

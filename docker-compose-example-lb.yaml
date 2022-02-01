@@ -19,14 +19,12 @@ services:
 
   kaspad_loadbalancer:
     container_name: kaspad_loadbalancer
-    image: haproxy:latest
+    image: supertypo/kaspad_loadbalancer:v0.11.11
     restart: unless-stopped
     ports:
+      - "9000:9000/tcp"
       - "16110:16110/tcp"
       - "16111:16111/tcp"
-    volumes:
-      - ./loadbalancer-example-haproxy.cfg:/haproxy.cfg
-    command: haproxy -f /haproxy.cfg
 
 volumes:
   kaspad1:

@@ -3,13 +3,15 @@
 VERSION=$1
 PUSH=$2
 
+set -e
+
 if [ -z "$VERSION" ]; then
   echo "Usage ${0} <kaspad-version> [<push>]"
   echo "Example: ${0} v0.11.11"
   exit 1
 fi
 
-docker build --pull --build-arg VERSION=${VERSION} -t supertypo/kaspad:${VERSION} .
+docker build --pull --build-arg VERSION=${VERSION} -t supertypo/kaspad:${VERSION} $(dirname $0)
 docker tag supertypo/kaspad:${VERSION} supertypo/kaspad:latest
 
 if [ "$PUSH" = "push" ]; then
