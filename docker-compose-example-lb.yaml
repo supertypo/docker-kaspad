@@ -3,7 +3,7 @@ version: "3"
 services:
   kaspad1:
     container_name: kaspad1
-    image: supertypo/kaspad:v0.11.11
+    image: supertypo/kaspad:v0.11.11_1
     restart: unless-stopped
     volumes:
       - kaspad1:/app/data/
@@ -11,7 +11,7 @@ services:
 
   kaspad2:
     container_name: kaspad2
-    image: supertypo/kaspad:v0.11.11
+    image: supertypo/kaspad:v0.11.11_1
     restart: unless-stopped
     volumes:
       - kaspad2:/app/data/
@@ -19,7 +19,7 @@ services:
 
   kaspad_loadbalancer:
     container_name: kaspad_loadbalancer
-    image: supertypo/kaspad_loadbalancer:v0.11.11
+    image: supertypo/kaspad_loadbalancer:v0.11.11_1
     restart: unless-stopped
     ports:
       - "9000:9000/tcp"

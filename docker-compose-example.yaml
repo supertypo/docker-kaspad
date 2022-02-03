@@ -3,7 +3,7 @@ version: "3"
 services:
   kaspad:
     container_name: kaspad
-    image: supertypo/kaspad:latest
+    image: supertypo/kaspad:v0.11.11_1
     restart: unless-stopped
     ports:
       - "16110:16110/tcp"
