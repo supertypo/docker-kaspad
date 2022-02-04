@@ -7,7 +7,7 @@ PUSH=$2
 set -e
 
 if [ -z "$VERSION" -o -z "$KASPAD_VERSION" ]; then
-  echo "Usage ${0} <kaspad-version_buildnr> [<push>]"
+  echo "Usage ${0} <kaspad-version_buildnr> [push]"
   echo "Example: ${0} v0.11.11_1"
   exit 1
 fi
