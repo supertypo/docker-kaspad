@@ -1,4 +1,4 @@
-FROM haproxy:latest
+FROM haproxy:2.5.1-alpine
 
 ARG KASPAD_VERSION
 
@@ -10,11 +10,6 @@ WORKDIR /app
 ENV PATH=/app:$PATH
 
 USER root
-
-RUN apt-get update && apt-get install -y \
-  wget \
-  unzip \
-  && rm -rf /var/lib/apt/lists/*
 
 RUN cd /tmp && \
   wget https://github.com/kaspanet/kaspad/releases/download/${KASPAD_VERSION}/kaspad-${KASPAD_VERSION}-linux.zip 2>&1 && \
