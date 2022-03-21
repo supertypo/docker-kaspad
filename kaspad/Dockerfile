@@ -16,7 +16,7 @@ RUN mkdir -p /app/data/ && \
 RUN cd /tmp && \
   wget https://github.com/kaspanet/kaspad/releases/download/${KASPAD_VERSION}/kaspad-${KASPAD_VERSION}-linux.zip 2>&1 && \
   unzip kaspad-${KASPAD_VERSION}-linux.zip && \
-  cp bin/kaspad bin/kaspactl /app/ && \
+  cp bin/kaspad bin/kaspactl bin/genkeypair bin/kaspawallet /app/ && \
   rm -r bin/ kaspad-${KASPAD_VERSION}-linux.zip
 
 USER kaspad
