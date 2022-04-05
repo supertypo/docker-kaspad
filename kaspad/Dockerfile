@@ -1,5 +1,6 @@
 FROM alpine:latest
 
+ARG REPO
 ARG KASPAD_VERSION
 
 EXPOSE 16110
@@ -14,7 +15,7 @@ RUN mkdir -p /app/data/ && \
   chown kaspad /app/data
 
 RUN cd /tmp && \
-  wget https://github.com/kaspanet/kaspad/releases/download/${KASPAD_VERSION}/kaspad-${KASPAD_VERSION}-linux.zip 2>&1 && \
+  wget ${REPO}/releases/download/${KASPAD_VERSION}/kaspad-${KASPAD_VERSION}-linux.zip 2>&1 && \
   unzip kaspad-${KASPAD_VERSION}-linux.zip && \
   cp bin/kaspad bin/kaspactl bin/genkeypair bin/kaspawallet /app/ && \
   rm -r bin/ kaspad-${KASPAD_VERSION}-linux.zip
