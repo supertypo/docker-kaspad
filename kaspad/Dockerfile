@@ -19,7 +19,7 @@ RUN mkdir -p /app/data/ && \
 RUN cd /tmp && \
   wget ${KASPAD_URL} 2>&1 && \
   unzip kaspad-${KASPAD_VERSION}-linux.zip && \
-  cp bin/kaspad bin/kaspactl bin/genkeypair bin/kaspawallet /app/ && \
+  cp bin/kaspad bin/kaspactl /app/ && \
   rm -r bin/ kaspad-${KASPAD_VERSION}-linux.zip
 
 USER kaspad
