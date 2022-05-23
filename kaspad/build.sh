@@ -3,7 +3,7 @@
 VERSION=$1
 KASPAD_VERSION=$(echo $VERSION | grep -oP ".*(?=_.+)")
 PUSH=$2
-REPO=${3:-https://github.com/kaspanet/kaspad}
+REPO_URL=${3:-https://github.com/kaspanet/kaspad}
 
 set -e
 
@@ -13,7 +13,7 @@ if [ -z "$VERSION" -o -z "$KASPAD_VERSION" ]; then
   exit 1
 fi
 
-docker build --pull --build-arg KASPAD_VERSION=${KASPAD_VERSION} --build-arg REPO=${REPO} -t supertypo/kaspad:${VERSION} $(dirname $0)
+docker build --pull --build-arg KASPAD_VERSION=${KASPAD_VERSION} --build-arg REPO_URL=${REPO_URL} -t supertypo/kaspad:${VERSION} $(dirname $0)
 docker tag supertypo/kaspad:${VERSION} supertypo/kaspad:latest
 
 if [ "$PUSH" = "push" ]; then

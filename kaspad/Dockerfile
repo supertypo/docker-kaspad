@@ -1,7 +1,9 @@
 FROM alpine:latest
 
-ARG REPO
+ARG REPO_URL
 ARG KASPAD_VERSION
+
+ENV KASPAD_URL=${REPO_URL}/releases/download/${KASPAD_VERSION}/kaspad-${KASPAD_VERSION}-linux.zip
 
 EXPOSE 16110
 EXPOSE 16111
@@ -15,7 +17,7 @@ RUN mkdir -p /app/data/ && \
   chown kaspad /app/data
 
 RUN cd /tmp && \
-  wget ${REPO}/releases/download/${KASPAD_VERSION}/kaspad-${KASPAD_VERSION}-linux.zip 2>&1 && \
+  wget ${KASPAD_URL} 2>&1 && \
   unzip kaspad-${KASPAD_VERSION}-linux.zip && \
   cp bin/kaspad bin/kaspactl bin/genkeypair bin/kaspawallet /app/ && \
   rm -r bin/ kaspad-${KASPAD_VERSION}-linux.zip
