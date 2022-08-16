@@ -1,4 +1,4 @@
-FROM haproxy:2.5.1-alpine
+FROM haproxy:lts-alpine
 
 ARG REPO_URL
 ARG KASPAD_VERSION
