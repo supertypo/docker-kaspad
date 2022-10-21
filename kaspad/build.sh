@@ -1,9 +1,11 @@
 #!/bin/sh
 
+REPO_URL_STABLE=https://github.com/kaspanet/kaspad
+
 VERSION=$1
 KASPAD_VERSION=$(echo $VERSION | grep -oP ".*(?=_.+)")
 PUSH=$2
-REPO_URL=${3:-https://github.com/kaspanet/kaspad}
+REPO_URL=${3:-$REPO_URL_STABLE}
 
 set -e
 
@@ -18,6 +20,8 @@ docker tag supertypo/kaspad:${VERSION} supertypo/kaspad:latest
 
 if [ "$PUSH" = "push" ]; then
   docker push supertypo/kaspad:${VERSION}
-  docker push supertypo/kaspad:latest
+  if [ "$REPO_URL" = "$REPO_URL_STABLE" ]; then
+    docker push supertypo/kaspad:latest    
+  fi
 fi
 
