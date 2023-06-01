@@ -11,7 +11,7 @@ set -e
 
 if [ -z "$VERSION" -o -z "$KASPAD_VERSION" ]; then
   echo "Usage ${0} <kaspad-version_buildnr> [push] [kaspad_repo_url]"
-  echo "Example: ${0} v0.11.11_1"
+  echo "Example: ${0} v0.12.13_1"
   exit 1
 fi
 

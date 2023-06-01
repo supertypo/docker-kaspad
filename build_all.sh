@@ -18,6 +18,13 @@ echo
 
 echo
 echo "========================="
+echo " Building Kaspawallet"
+echo "========================="
+echo
+./kaspawallet/build.sh $@
+
+echo
+echo "========================="
 echo " Done"
 echo "========================="
 echo
