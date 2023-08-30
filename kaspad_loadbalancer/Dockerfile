@@ -1,9 +1,12 @@
+ARG KASPAD_DOCKER_REPO
+ARG KASPA_VERSION
+
+FROM $KASPAD_DOCKER_REPO:$KASPA_VERSION AS kaspad
+
 FROM haproxy:lts-alpine
 
-ARG REPO_URL
-ARG KASPAD_VERSION
-
-ENV KASPAD_URL=${REPO_URL}/releases/download/${KASPAD_VERSION}/kaspad-${KASPAD_VERSION}-linux.zip
+ARG KASPAD_DOCKER_REPO
+ARG KASPA_VERSION
 
 EXPOSE 16110
 EXPOSE 16111
@@ -14,11 +17,7 @@ ENV PATH=/app:$PATH
 
 USER root
 
-RUN cd /tmp && \
-  wget ${KASPAD_URL} 2>&1 && \
-  unzip kaspad-${KASPAD_VERSION}-linux.zip && \
-  mv bin/kaspactl /app/ && \
-  rm -r bin/ kaspad-${KASPAD_VERSION}-linux.zip
+COPY --from=kaspad /app/kaspactl /app/
 
 COPY is-synced.sh /app/
 RUN chmod 755 /app/is-synced.sh

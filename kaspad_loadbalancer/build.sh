@@ -1,27 +1,86 @@
 #!/bin/sh
 
-REPO_URL_STABLE=https://github.com/kaspanet/kaspad
+DOCKER_REPO="supertypo/kaspad_loadbalancer"
+KASPAD_DOCKER_REPO="supertypo/kaspad"
+ARCHES="linux/amd64 linux/arm64"
 
-VERSION=$1
-KASPAD_VERSION=$(echo $VERSION | grep -oP ".*(?=_.+)")
-PUSH=$2
-REPO_URL=${3:-$REPO_URL_STABLE}
+BUILD_DIR="$(dirname $0)"
+PUSH=$1
+VERSION=${2:-nightly}
 
 set -e
 
-if [ -z "$VERSION" -o -z "$KASPAD_VERSION" ]; then
-  echo "Usage ${0} <kaspad-version_buildnr> [push] [kaspad_repo_url]"
-  echo "Example: ${0} v0.12.13_1"
-  exit 1
-fi
+docker=docker
+id -nG $USER | grep -qw docker || docker="sudo $docker"
 
-docker build --pull --build-arg KASPAD_VERSION=${KASPAD_VERSION} --build-arg REPO_URL=${REPO_URL} -t supertypo/kaspad_loadbalancer:${VERSION} $(dirname $0)
-docker tag supertypo/kaspad_loadbalancer:${VERSION} supertypo/kaspad_loadbalancer:latest
+plain_build() {
+  echo
+  echo "===================================================="
+  echo " Running current arch build"
+  echo "===================================================="
+  dockerRepo="${DOCKER_REPO}"
+
+  $docker build --pull \
+    --build-arg KASPAD_DOCKER_REPO="$KASPAD_DOCKER_REPO" \
+    --build-arg KASPA_VERSION="$VERSION" \
+    --tag $dockerRepo:$VERSION "$BUILD_DIR"
+
+  if [ "$VERSION" != "nightly" ]; then
+     $docker tag $dockerRepo:$VERSION $dockerRepo:nightly
+     echo Tagged $dockerRepo:nightly
+     $docker tag $dockerRepo:$VERSION $dockerRepo:latest
+     echo Tagged $dockerRepo:latest
+  fi
+
+  if [ "$PUSH" = "push" ]; then
+    $docker push $dockerRepo:$VERSION
+    if [ "$VERSION" != "nightly" ]; then
+      $docker push $dockerRepo:nightly
+      $docker push $dockerRepo:latest
+    fi
+  fi
+  echo "===================================================="
+  echo " Completed current arch build"
+  echo "===================================================="
+}
+
+multi_arch_build() {
+  echo
+  echo "===================================================="
+  echo " Running multi arch build"
+  echo "===================================================="
+  dockerRepo="${DOCKER_REPO}"
+  dockerRepoArgs=
+  if [ "$PUSH" = "push" ]; then
+    dockerRepoArgs="$dockerRepoArgs --push"
+  fi
+  if [ "$VERSION" != "nightly" ]; then
+    dockerRepoArgs="$dockerRepoArgs --tag $dockerRepo:$VERSION"
+    dockerRepoArgs="$dockerRepoArgs --tag $dockerRepo:nightly"
+    dockerRepoArgs="$dockerRepoArgs --tag $dockerRepo:latest"
+  fi
+  $docker buildx build --pull --platform=$(echo $ARCHES | sed 's/ /,/g') $dockerRepoArgs \
+    --build-arg KASPAD_DOCKER_REPO="$KASPAD_DOCKER_REPO" \
+    --build-arg KASPA_VERSION="$VERSION" \
+    --tag $dockerRepo:$VERSION "$BUILD_DIR"
+  echo "===================================================="
+  echo " Completed multi arch build"
+  echo "===================================================="
+}
 
 if [ "$PUSH" = "push" ]; then
-  docker push supertypo/kaspad_loadbalancer:${VERSION}
-  if [ "$REPO_URL" = "$REPO_URL_STABLE" ]; then
-    docker push supertypo/kaspad_loadbalancer:latest
+  echo
+  echo "===================================================="
+  echo " Setup multi arch build ($ARCHES)"
+  echo "===================================================="
+  if $docker buildx create --name=mybuilder --append --node=mybuilder0 --platform=$(echo $ARCHES | sed 's/ /,/g') --bootstrap --use 1>/dev/null 2>&1; then
+    echo "SUCCESS - doing multi arch build"
+    multi_arch_build
+  else
+    echo "FAILED - building on current arch"
+    plain_build
   fi
+else
+  plain_build
 fi
 

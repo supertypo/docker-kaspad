@@ -16,12 +16,12 @@ echo "========================="
 echo
 ./kaspad_loadbalancer/build.sh $@
 
-echo
-echo "========================="
-echo " Building Kaspawallet"
-echo "========================="
-echo
-./kaspawallet/build.sh $@
+#echo
+#echo "========================="
+#echo " Building Kaspawallet"
+#echo "========================="
+#echo
+#./kaspawallet/build.sh $@
 
 echo
 echo "========================="

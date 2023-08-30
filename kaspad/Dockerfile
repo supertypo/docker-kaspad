@@ -1,28 +1,46 @@
+##
+# builder image
+##
+FROM golang:1.20 as builder
+
+ARG REPO_DIR
+
+COPY "$REPO_DIR" /kaspa
+
+WORKDIR /kaspa
+
+RUN go install -ldflags="-s -w -extldflags=-static" -tags netgo,osusergo . ./cmd/...
+
+##
+# kaspad image
+##
 FROM alpine:latest
 
 ARG REPO_URL
-ARG KASPAD_VERSION
+ARG KASPA_VERSION
 
-ENV KASPAD_URL=${REPO_URL}/releases/download/${KASPAD_VERSION}/kaspad-${KASPAD_VERSION}-linux.zip
+ENV REPO_URL="$REPO_URL" \
+  KASPA_VERSION="$KASPA_VERSION" \
+  KASPA_UID=51591 \
+  PATH=/app:$PATH
 
-EXPOSE 16110
-EXPOSE 16111
-
-WORKDIR /app
-
-ENV PATH=/app:$PATH
+RUN apk --no-cache add \
+  libgcc \
+  libstdc++ \
+  dumb-init
 
 RUN mkdir -p /app/data/ && \
-  adduser -h /app/data -S -D -u 51591 kaspad && \
-  chown kaspad /app/data
+  addgroup -S -g $KASPA_UID kaspa && \
+  adduser -h /app/data -S -D -g '' -G kaspa -u $KASPA_UID kaspa
 
-RUN cd /tmp && \
-  wget ${KASPAD_URL} 2>&1 && \
-  unzip kaspad-${KASPAD_VERSION}-linux.zip && \
-  cp bin/kaspad bin/kaspactl /app/ && \
-  rm -r bin/ kaspad-${KASPAD_VERSION}-linux.zip
+USER kaspa
 
-USER kaspad
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
-CMD ["/app/kaspad", "--utxoindex"]
+EXPOSE 16111 16110
+VOLUME /app/data
+
+COPY --from=builder /go/bin/kaspad /go/bin/kaspactl /app/
+
+CMD kaspad --utxoindex
 
