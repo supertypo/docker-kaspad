@@ -27,6 +27,7 @@ ENV REPO_URL="$REPO_URL" \
 RUN apk --no-cache add \
   libgcc \
   libstdc++ \
+  bind-tools \
   dumb-init
 
 RUN mkdir -p /app/data/ && \
@@ -35,12 +36,14 @@ RUN mkdir -p /app/data/ && \
 
 USER kaspa
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+COPY ./entrypoint.sh /app/
+
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 EXPOSE 16111 16110
 VOLUME /app/data
 
 COPY --from=builder /go/bin/kaspad /go/bin/kaspactl /app/
 
-CMD kaspad --utxoindex
+CMD kaspad --externalip=$EXTERNAL_IP --utxoindex
 
