@@ -8,7 +8,13 @@ if [ "${IPV4}x" != "x" ]; then
 elif [ "${IPV4}x" != "x" ]; then
   export EXTERNAL_IP=$IPV6
 fi
-echo "EXTERNAL_IP=$EXTERNAL_IP"
 
-exec dumb-init -- "$@"
+if [ -n "$EXTERNAL_IP" ]; then
+  case "$@" in
+    *externalip*) exec dumb-init -- "$@" ;;
+    *)            exec dumb-init -- "$@" --externalip=$EXTERNAL_IP ;;
+  esac
+else
+  exec dumb-init -- "$@"
+fi
 
