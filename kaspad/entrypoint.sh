@@ -12,7 +12,12 @@ fi
 if [ -n "$EXTERNAL_IP" ]; then
   case "$@" in
     *externalip*) exec dumb-init -- "$@" ;;
-    *)            exec dumb-init -- "$@" --externalip=$EXTERNAL_IP ;;
+    *)
+      case "$@" in
+        kaspad*) exec dumb-init -- "$@" --externalip=$EXTERNAL_IP ;;
+        *) exec dumb-init -- "$@" ;;
+      esac
+    ;;
   esac
 else
   exec dumb-init -- "$@"
