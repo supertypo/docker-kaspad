@@ -39,12 +39,12 @@ USER kaspa
 
 COPY ./entrypoint.sh /app/
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 16111 16110
 VOLUME /app/data
 
 COPY --from=builder /go/bin/kaspad /go/bin/kaspactl /app/
 
-CMD kaspad --utxoindex
+CMD ["kaspad", "--utxoindex"]
 
