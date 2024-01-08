@@ -21,6 +21,8 @@ ARG KASPA_VERSION
 
 ENV REPO_URL="$REPO_URL" \
   KASPA_VERSION="$KASPA_VERSION" \
+  KASPA_USER=kaspa \
+  KASPA_HOME=/app/data \
   KASPA_UID=51591 \
   PATH=/app:$PATH
 
@@ -29,13 +31,14 @@ RUN apk --no-cache add \
   libstdc++ \
   bind-tools \
   dumb-init \
+  su-exec \
   grep
 
-RUN mkdir -p /app/data/ && \
-  addgroup -S -g $KASPA_UID kaspa && \
-  adduser -h /app/data -S -D -g '' -G kaspa -u $KASPA_UID kaspa
+WORKDIR /app
 
-USER kaspa
+RUN mkdir $KASPA_HOME && \
+  addgroup -S -g $KASPA_UID $KASPA_USER && \
+  adduser -h $KASPA_HOME -S -D -g '' -G $KASPA_USER -u $KASPA_UID $KASPA_USER
 
 COPY ./entrypoint.sh /app/
 

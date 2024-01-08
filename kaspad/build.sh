@@ -17,7 +17,6 @@ set -e
 
 if [ ! -d "$BUILD_DIR/$REPO_DIR" ]; then
   git clone "$REPO_URL" "$BUILD_DIR/$REPO_DIR"
-  echo $(cd "$BUILD_DIR/$REPO_DIR" && git reset --hard HEAD~1)
 fi
 
 echo "===================================================="

@@ -1,10 +1,7 @@
 #!/bin/sh
+runCmd="exec su-exec $KASPA_USER $@"
 
-if echo "$@" | grep -qEv "^(/app/)?kaspad( |$)"; then
-  exec dumb-init -- "$@"
-elif echo "$@" | grep -qE "\--externalip(=| )"; then
-  exec dumb-init -- "$@"
-else
+if echo "$@" | grep -qE "^(/app/)?kaspad( |$)" && ! echo "$@" | grep -qE "\--externalip(=| )"; then
   listenPort=$(echo "$@" | grep -oP "\--listen(=| )\S+:\K\d+( |$)" | tail -1)
   if [ -n "$listenPort" ]; then
     listenPort=":$listenPort"
@@ -23,6 +20,11 @@ else
   else
     echo "Public ipv6 address not found"
   fi
-  exec dumb-init -- "$@" $externalIpArgs
+  runCmd="$runCmd $externalIpArgs"
 fi
+
+echo "Setting owner on $KASPA_HOME to $KASPA_USER"
+chown $KASPA_USER:$KASPA_USER $KASPA_HOME
+echo "Executing: $runCmd"
+$runCmd
 
