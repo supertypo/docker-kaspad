@@ -2,6 +2,8 @@
 
 DOCKER_REPO="supertypo/kaspad_loadbalancer"
 KASPAD_DOCKER_REPO="supertypo/kaspad"
+KCHECK_DOCKER_REPO="supertypo/kcheck"
+KCHECK_VERSION="nightly"
 ARCHES="linux/amd64 linux/arm64"
 
 BUILD_DIR="$(dirname $0)"
@@ -23,6 +25,8 @@ plain_build() {
   $docker build --pull \
     --build-arg KASPAD_DOCKER_REPO="$KASPAD_DOCKER_REPO" \
     --build-arg KASPA_VERSION="$VERSION" \
+    --build-arg KCHECK_DOCKER_REPO="$KCHECK_DOCKER_REPO" \
+    --build-arg KCHECK_VERSION="$KCHECK_VERSION" \
     --tag $dockerRepo:$VERSION "$BUILD_DIR"
 
   if [ "$VERSION" != "nightly" ]; then
@@ -62,6 +66,8 @@ multi_arch_build() {
   $docker buildx build --pull --platform=$(echo $ARCHES | sed 's/ /,/g') $dockerRepoArgs \
     --build-arg KASPAD_DOCKER_REPO="$KASPAD_DOCKER_REPO" \
     --build-arg KASPA_VERSION="$VERSION" \
+    --build-arg KCHECK_DOCKER_REPO="$KCHECK_DOCKER_REPO" \
+    --build-arg KCHECK_VERSION="$KCHECK_VERSION" \
     --tag $dockerRepo:$VERSION "$BUILD_DIR"
   echo "===================================================="
   echo " Completed multi arch build"
