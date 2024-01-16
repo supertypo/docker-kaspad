@@ -30,7 +30,6 @@ RUN apk --no-cache add \
   libgcc \
   libstdc++ \
   bind-tools \
-  dumb-init \
   su-exec \
   grep
 
