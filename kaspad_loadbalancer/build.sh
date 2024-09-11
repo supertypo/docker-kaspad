@@ -3,7 +3,7 @@
 DOCKER_REPO="supertypo/kaspad_loadbalancer"
 KASPAD_DOCKER_REPO="supertypo/kaspad"
 KCHECK_DOCKER_REPO="supertypo/kcheck"
-KCHECK_VERSION="nightly"
+KCHECK_VERSION="latest"
 ARCHES="linux/amd64 linux/arm64"
 
 BUILD_DIR="$(dirname $0)"

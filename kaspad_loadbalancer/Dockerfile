@@ -21,7 +21,7 @@ ENV PATH=/app:$PATH
 USER root
 
 RUN apk --no-cache add libgcc
-COPY --from=kcheck /kcheck /app/kcheck
+COPY --from=kcheck /app/kcheck /app/
 COPY is-synced-wrpc.sh /app/
 RUN chmod 755 /app/is-synced-wrpc.sh
 
